@@ -1,0 +1,956 @@
+{
+  "api": {
+    "name": "CapacitorPurchasesPlugin",
+    "slug": "capacitorpurchasesplugin",
+    "docs": "",
+    "tags": [],
+    "methods": [
+      {
+        "name": "setup",
+        "signature": "(data: { apiKey: string; appUserID?: string; observerMode?: boolean; enableAdServicesAttribution?: boolean; collectDeviceIdentifiers?: boolean; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "data",
+            "docs": "",
+            "type": "{ apiKey: string; appUserID?: string | undefined; observerMode?: boolean | undefined; enableAdServicesAttribution?: boolean | undefined; collectDeviceIdentifiers?: boolean | undefined; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "apiKey RevenueCat API Key. Needs to be a string"
+          },
+          {
+            "name": "param",
+            "text": "appUserID The unique app user id for this user.\nThis user id will allow users to share their purchases and subscriptions across devices.\nLeave empty if you want RevenueCat to generate this for you."
+          },
+          {
+            "name": "param",
+            "text": "observerMode Set this to true if you have your own IAP implementation"
+          },
+          {
+            "name": "param",
+            "text": "enableAdServicesAttribution Set this to true if you want to use Apple's Search Ads attribution collection."
+          },
+          {
+            "name": "param",
+            "text": "collectDeviceIdentifiers Set this to true if you want to collect the device identifiers.\nand want to use only RevenueCat’s backend. Default is false."
+          }
+        ],
+        "docs": "Sets up  with your API key and an app user id.",
+        "complexTypes": [],
+        "slug": "setup"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: \"purchasesUpdate\", listenerFunc: (data: { purchases: Package; customerInfo: CustomerInfo; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "'purchasesUpdate'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "(data: { purchases: Package; customerInfo: CustomerInfo; }) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle> & PluginListenerHandle",
+        "tags": [
+          {
+            "name": "since",
+            "text": "2.0.2"
+          }
+        ],
+        "docs": "Called when partialResults set to true and result received\n\nProvides partial result.",
+        "complexTypes": [
+          "PluginListenerHandle",
+          "Package",
+          "CustomerInfo"
+        ],
+        "slug": "addlistenerpurchasesupdate"
+      },
+      {
+        "name": "getOfferings",
+        "signature": "() => Promise<{ offerings: Offerings; }>",
+        "parameters": [],
+        "returns": "Promise<{ offerings: Offerings; }>",
+        "tags": [],
+        "docs": "Gets the Offerings configured in the RevenueCat dashboard",
+        "complexTypes": [
+          "Offerings"
+        ],
+        "slug": "getofferings"
+      },
+      {
+        "name": "purchasePackage",
+        "signature": "(data: { identifier: string; offeringIdentifier: string; oldSKU?: string | null; }) => Promise<{ customerInfo: CustomerInfo; }>",
+        "parameters": [
+          {
+            "name": "data",
+            "docs": "",
+            "type": "{ identifier: string; offeringIdentifier: string; oldSKU?: string | null | undefined; }"
+          }
+        ],
+        "returns": "Promise<{ customerInfo: CustomerInfo; }>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "aPackage The Package you wish to purchase. You can get the Packages by calling getOfferings"
+          }
+        ],
+        "docs": "Make a purchase",
+        "complexTypes": [
+          "CustomerInfo"
+        ],
+        "slug": "purchasepackage"
+      },
+      {
+        "name": "restorePurchases",
+        "signature": "() => Promise<{ customerInfo: CustomerInfo; }>",
+        "parameters": [],
+        "returns": "Promise<{ customerInfo: CustomerInfo; }>",
+        "tags": [],
+        "docs": "Restores a user's previous  and links their appUserIDs to any user's also using those .",
+        "complexTypes": [
+          "CustomerInfo"
+        ],
+        "slug": "restorepurchases"
+      },
+      {
+        "name": "setAttributes",
+        "signature": "(data: { attributes: { [key: string]: string | null; }; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "data",
+            "docs": "",
+            "type": "{ attributes: { [key: string]: string | null; }; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "attributes Map of attributes by key. Set the value as an empty string to delete an attribute."
+          }
+        ],
+        "docs": "Subscriber attributes are useful for storing additional, structured information on a user.\nSince attributes are writable using a public key they should not be used for\nmanaging secure or sensitive information such as subscription status, coins, etc.\n\nKey names starting with \"$\" are reserved names used by RevenueCat. For a full list of key\nrestrictions refer to our guide: https://docs.revenuecat.com/docs/subscriber-attributes",
+        "complexTypes": [],
+        "slug": "setattributes"
+      },
+      {
+        "name": "logIn",
+        "signature": "(data: { appUserID: string; }) => Promise<LogInResult>",
+        "parameters": [
+          {
+            "name": "data",
+            "docs": "",
+            "type": "{ appUserID: string; }"
+          }
+        ],
+        "returns": "Promise<LogInResult>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "appUserID The appUserID that should be linked to the currently user"
+          },
+          {
+            "name": "param",
+            "text": "callback Callback that will receive an object that contains the customerInfo after logging in, as well as a boolean indicating\nwhether the user has just been created for the first time in the RevenueCat backend."
+          },
+          {
+            "name": "param",
+            "text": "errorCallback Callback that will be triggered whenever there is any problem logging in."
+          }
+        ],
+        "docs": "This function will logIn the current user with an appUserID. Typically this would be used after a log in\nto identify a user without calling configure.",
+        "complexTypes": [
+          "LogInResult"
+        ],
+        "slug": "login"
+      },
+      {
+        "name": "logOut",
+        "signature": "() => Promise<{ customerInfo: CustomerInfo; }>",
+        "parameters": [],
+        "returns": "Promise<{ customerInfo: CustomerInfo; }>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "callback Callback that will receive the new purchaser info after resetting"
+          },
+          {
+            "name": "param",
+            "text": "errorCallback Callback that will be triggered whenever there is an error when logging out.\nThis could happen for example if logOut is called but the current user is anonymous."
+          }
+        ],
+        "docs": "Logs out the  client clearing the saved appUserID. This will generate a random user id and save it in the cache.\nIf the current user is already anonymous, this will produce a Error.",
+        "complexTypes": [
+          "CustomerInfo"
+        ],
+        "slug": "logout"
+      },
+      {
+        "name": "getCustomerInfo",
+        "signature": "() => Promise<{ customerInfo: CustomerInfo; }>",
+        "parameters": [],
+        "returns": "Promise<{ customerInfo: CustomerInfo; }>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "callback Callback that will receive the purchaser info"
+          },
+          {
+            "name": "param",
+            "text": "errorCallback Callback that will be triggered whenever there is any problem retrieving the purchaser info"
+          }
+        ],
+        "docs": "Gets the current purchaser info. This call will return the cached purchaser info unless the cache is stale, in which case,\nit will make a network call to retrieve it from the servers.",
+        "complexTypes": [
+          "CustomerInfo"
+        ],
+        "slug": "getcustomerinfo"
+      },
+      {
+        "name": "setDebugLogsEnabled",
+        "signature": "(data: { enabled: boolean; }) => Promise<void>",
+        "parameters": [
+          {
+            "name": "data",
+            "docs": "",
+            "type": "{ enabled: boolean; }"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "enabled Enable or not debug logs"
+          }
+        ],
+        "docs": "Enables/Disables debugs logs",
+        "complexTypes": [],
+        "slug": "setdebuglogsenabled"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [
+    {
+      "name": "PluginListenerHandle",
+      "slug": "pluginlistenerhandle",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "remove",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "() => Promise<void>"
+        }
+      ]
+    },
+    {
+      "name": "Package",
+      "slug": "package",
+      "docs": "Contains information about the product available for the user to purchase.\nFor more info see https://docs.revenuecat.com/docs/entitlements",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "identifier",
+          "tags": [],
+          "docs": "Unique identifier for this package. Can be one a predefined package type or a custom one.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "packageType",
+          "tags": [],
+          "docs": "Package type for the product. Will be one of [PACKAGE_TYPE].",
+          "complexTypes": [
+            "PACKAGE_TYPE"
+          ],
+          "type": "PACKAGE_TYPE"
+        },
+        {
+          "name": "product",
+          "tags": [],
+          "docs": "Product assigned to this package.",
+          "complexTypes": [
+            "Product"
+          ],
+          "type": "Product"
+        },
+        {
+          "name": "offeringIdentifier",
+          "tags": [],
+          "docs": "Offering this package belongs to.",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Product",
+      "slug": "product",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "identifier",
+          "tags": [],
+          "docs": "Product Id.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "tags": [],
+          "docs": "Description of the product.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "tags": [],
+          "docs": "Title of the product.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "price",
+          "tags": [],
+          "docs": "Price of the product in the local currency.",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "priceString",
+          "tags": [],
+          "docs": "Formatted price of the item, including its currency sign, such as €3.99.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "currencyCode",
+          "tags": [],
+          "docs": "Currency code for price and original price.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "currencySymbol",
+          "tags": [],
+          "docs": "Currency symbol for price and original price.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "isFamilyShareable",
+          "tags": [],
+          "docs": "Boolean indicating if the product is sharable with family",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "subscriptionGroupIdentifier",
+          "tags": [],
+          "docs": "Group identifier for the product.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "subscriptionPeriod",
+          "tags": [],
+          "docs": "The Product subcription group identifier.",
+          "complexTypes": [
+            "SubscriptionPeriod"
+          ],
+          "type": "SubscriptionPeriod"
+        },
+        {
+          "name": "introductoryPrice",
+          "tags": [],
+          "docs": "The Product introductory Price.",
+          "complexTypes": [
+            "SKProductDiscount"
+          ],
+          "type": "SKProductDiscount | null"
+        },
+        {
+          "name": "discounts",
+          "tags": [],
+          "docs": "The Product discounts list.",
+          "complexTypes": [
+            "SKProductDiscount"
+          ],
+          "type": "SKProductDiscount[]"
+        }
+      ]
+    },
+    {
+      "name": "SubscriptionPeriod",
+      "slug": "subscriptionperiod",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "numberOfUnits",
+          "tags": [],
+          "docs": "The Subscription Period number of unit.",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "unit",
+          "tags": [],
+          "docs": "The Subscription Period unit.",
+          "complexTypes": [],
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "name": "SKProductDiscount",
+      "slug": "skproductdiscount",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "identifier",
+          "tags": [],
+          "docs": "The Product discount identifier.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "tags": [],
+          "docs": "The Product discount type.",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "price",
+          "tags": [],
+          "docs": "The Product discount price.",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "priceString",
+          "tags": [],
+          "docs": "Formatted price of the item, including its currency sign, such as €3.99.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "currencySymbol",
+          "tags": [],
+          "docs": "The Product discount currency symbol.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "currencyCode",
+          "tags": [],
+          "docs": "The Product discount currency code.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "paymentMode",
+          "tags": [],
+          "docs": "The Product discount paymentMode.",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "numberOfPeriods",
+          "tags": [],
+          "docs": "The Product discount number Of Periods.",
+          "complexTypes": [],
+          "type": "number"
+        },
+        {
+          "name": "subscriptionPeriod",
+          "tags": [],
+          "docs": "The Product discount subscription period.",
+          "complexTypes": [
+            "SubscriptionPeriod"
+          ],
+          "type": "SubscriptionPeriod"
+        }
+      ]
+    },
+    {
+      "name": "CustomerInfo",
+      "slug": "customerinfo",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "entitlements",
+          "tags": [],
+          "docs": "Entitlements attached to this purchaser info",
+          "complexTypes": [
+            "EntitlementInfos"
+          ],
+          "type": "EntitlementInfos"
+        },
+        {
+          "name": "activeSubscriptions",
+          "tags": [],
+          "docs": "Set of active subscription skus",
+          "complexTypes": [],
+          "type": "[string]"
+        },
+        {
+          "name": "allPurchasedProductIdentifiers",
+          "tags": [],
+          "docs": "Set of purchased skus, active and inactive",
+          "complexTypes": [],
+          "type": "[string]"
+        },
+        {
+          "name": "nonSubscriptionTransactions",
+          "tags": [],
+          "docs": "Returns all the non-subscription  a user has made.\nThe  are ordered by purchase date in ascending order.",
+          "complexTypes": [
+            "Transaction"
+          ],
+          "type": "Transaction[]"
+        },
+        {
+          "name": "latestExpirationDate",
+          "tags": [],
+          "docs": "The latest expiration date of all purchased skus",
+          "complexTypes": [],
+          "type": "string | null"
+        },
+        {
+          "name": "firstSeen",
+          "tags": [],
+          "docs": "The date this user was first seen in RevenueCat.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "originalAppUserId",
+          "tags": [],
+          "docs": "The original App User Id recorded for this user.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "requestDate",
+          "tags": [],
+          "docs": "Date when this info was requested",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "originalApplicationVersion",
+          "tags": [],
+          "docs": "Returns the version number for the version of the application when the\nuser bought the app. Use this for grandfathering users when migrating\nto subscriptions.\n\nThis corresponds to the value of CFBundleVersion (in iOS) in the\nInfo.plist file when the purchase was originally made. This is always null\nin Android",
+          "complexTypes": [],
+          "type": "string | null"
+        },
+        {
+          "name": "originalPurchaseDate",
+          "tags": [],
+          "docs": "Returns the purchase date for the version of the application when the user bought the app.\nUse this for grandfathering users when migrating to subscriptions.",
+          "complexTypes": [],
+          "type": "string | null"
+        },
+        {
+          "name": "managementURL",
+          "tags": [],
+          "docs": "URL to manage the active subscription of the user. If this user has an active iOS\nsubscription, this will point to the App Store, if the user has an active Play Store subscription\nit will point there. If there are no active subscriptions it will be null.\nIf there are multiple for different platforms, it will point to the device store.",
+          "complexTypes": [],
+          "type": "string | null"
+        }
+      ]
+    },
+    {
+      "name": "EntitlementInfos",
+      "slug": "entitlementinfos",
+      "docs": "Contains all the entitlements associated to the user.",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "all",
+          "tags": [],
+          "docs": "Map of all EntitlementInfo (`PurchasesEntitlementInfo`) objects (active and inactive) keyed by entitlement identifier.",
+          "complexTypes": [
+            "EntitlementInfo"
+          ],
+          "type": "{ [key: string]: EntitlementInfo; }"
+        },
+        {
+          "name": "active",
+          "tags": [],
+          "docs": "Map of active EntitlementInfo (`PurchasesEntitlementInfo`) objects keyed by entitlement identifier.",
+          "complexTypes": [
+            "EntitlementInfo"
+          ],
+          "type": "{ [key: string]: EntitlementInfo; }"
+        }
+      ]
+    },
+    {
+      "name": "EntitlementInfo",
+      "slug": "entitlementinfo",
+      "docs": "The EntitlementInfo object gives you access to all of the information about the status of a user entitlement.",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "identifier",
+          "tags": [],
+          "docs": "The entitlement identifier configured in the RevenueCat dashboard",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "isActive",
+          "tags": [],
+          "docs": "True if the user has access to this entitlement",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "willRenew",
+          "tags": [],
+          "docs": "True if the underlying subscription is set to renew at the end of the billing period (expirationDate).\nWill always be True if entitlement is for lifetime access.",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "periodType",
+          "tags": [],
+          "docs": "The last period type this entitlement was in. Either: NORMAL, INTRO, TRIAL.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "latestPurchaseDate",
+          "tags": [],
+          "docs": "The latest purchase or renewal date for the entitlement.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "originalPurchaseDate",
+          "tags": [],
+          "docs": "The first date this entitlement was purchased.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "expirationDate",
+          "tags": [],
+          "docs": "The expiration date for the entitlement, can be `null` for lifetime access. If the `periodType` is `trial`,\nthis is the trial expiration date.",
+          "complexTypes": [],
+          "type": "string | null"
+        },
+        {
+          "name": "store",
+          "tags": [],
+          "docs": "The store where this entitlement was unlocked from. Either: appStore, macAppStore, playStore, stripe,\npromotional, unknownStore",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "productIdentifier",
+          "tags": [],
+          "docs": "The product identifier that unlocked this entitlement",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "isSandbox",
+          "tags": [],
+          "docs": "False if this entitlement is unlocked via a production purchase",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "unsubscribeDetectedAt",
+          "tags": [
+            {
+              "text": ": Entitlement may still be active even if user has unsubscribed. Check the `isActive` property.",
+              "name": "note"
+            }
+          ],
+          "docs": "The date an unsubscribe was detected. Can be `null`.",
+          "complexTypes": [],
+          "type": "string | null"
+        },
+        {
+          "name": "billingIssueDetectedAt",
+          "tags": [
+            {
+              "text": ": Entitlement may still be active even if there is a billing issue. Check the `isActive` property.",
+              "name": "note"
+            }
+          ],
+          "docs": "The date a billing issue was detected. Can be `null` if there is no billing issue or an issue has been resolved",
+          "complexTypes": [],
+          "type": "string | null"
+        }
+      ]
+    },
+    {
+      "name": "Transaction",
+      "slug": "transaction",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "transactionIdentifier",
+          "tags": [],
+          "docs": "RevenueCat Id associated to the transaction.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "productIdentifier",
+          "tags": [],
+          "docs": "Product Id associated with the transaction.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "purchaseDate",
+          "tags": [],
+          "docs": "Purchase date of the transaction in ISO 8601 format.",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Offerings",
+      "slug": "offerings",
+      "docs": "Contains all the offerings configured in RevenueCat dashboard.\nFor more info see https://docs.revenuecat.com/docs/entitlements",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "all",
+          "tags": [],
+          "docs": "Map of all Offerings [PurchasesOffering] objects keyed by their identifier.",
+          "complexTypes": [
+            "Offering"
+          ],
+          "type": "{ [key: string]: Offering; }"
+        },
+        {
+          "name": "current",
+          "tags": [],
+          "docs": "Current offering configured in the RevenueCat dashboard.",
+          "complexTypes": [
+            "Offering"
+          ],
+          "type": "Offering | null"
+        }
+      ]
+    },
+    {
+      "name": "Offering",
+      "slug": "offering",
+      "docs": "An offering is a collection of Packages (`PurchasesPackage`) available for the user to purchase.\nFor more info see https://docs.revenuecat.com/docs/entitlements",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "identifier",
+          "tags": [],
+          "docs": "Unique identifier defined in RevenueCat dashboard.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "serverDescription",
+          "tags": [],
+          "docs": "Offering description defined in RevenueCat dashboard.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "availablePackages",
+          "tags": [],
+          "docs": "Array of `Package` objects available for purchase.",
+          "complexTypes": [
+            "Package"
+          ],
+          "type": "Package[]"
+        },
+        {
+          "name": "lifetime",
+          "tags": [],
+          "docs": "Lifetime package type configured in the RevenueCat dashboard, if available.",
+          "complexTypes": [
+            "Package"
+          ],
+          "type": "Package | null"
+        },
+        {
+          "name": "annual",
+          "tags": [],
+          "docs": "Annual package type configured in the RevenueCat dashboard, if available.",
+          "complexTypes": [
+            "Package"
+          ],
+          "type": "Package | null"
+        },
+        {
+          "name": "sixMonth",
+          "tags": [],
+          "docs": "Six month package type configured in the RevenueCat dashboard, if available.",
+          "complexTypes": [
+            "Package"
+          ],
+          "type": "Package | null"
+        },
+        {
+          "name": "threeMonth",
+          "tags": [],
+          "docs": "Three month package type configured in the RevenueCat dashboard, if available.",
+          "complexTypes": [
+            "Package"
+          ],
+          "type": "Package | null"
+        },
+        {
+          "name": "twoMonth",
+          "tags": [],
+          "docs": "Two month package type configured in the RevenueCat dashboard, if available.",
+          "complexTypes": [
+            "Package"
+          ],
+          "type": "Package | null"
+        },
+        {
+          "name": "monthly",
+          "tags": [],
+          "docs": "Monthly package type configured in the RevenueCat dashboard, if available.",
+          "complexTypes": [
+            "Package"
+          ],
+          "type": "Package | null"
+        },
+        {
+          "name": "weekly",
+          "tags": [],
+          "docs": "Weekly package type configured in the RevenueCat dashboard, if available.",
+          "complexTypes": [
+            "Package"
+          ],
+          "type": "Package | null"
+        }
+      ]
+    },
+    {
+      "name": "LogInResult",
+      "slug": "loginresult",
+      "docs": "Holds the logIn result",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "customerInfo",
+          "tags": [],
+          "docs": "The Purchaser Info for the user.",
+          "complexTypes": [
+            "CustomerInfo"
+          ],
+          "type": "CustomerInfo"
+        },
+        {
+          "name": "created",
+          "tags": [],
+          "docs": "True if the call resulted in a new user getting created in the RevenueCat backend.",
+          "complexTypes": [],
+          "type": "boolean"
+        }
+      ]
+    }
+  ],
+  "enums": [
+    {
+      "name": "PACKAGE_TYPE",
+      "slug": "package_type",
+      "members": [
+        {
+          "name": "UNKNOWN",
+          "value": "\"UNKNOWN\"",
+          "tags": [],
+          "docs": "A package that was defined with a custom identifier."
+        },
+        {
+          "name": "CUSTOM",
+          "value": "\"CUSTOM\"",
+          "tags": [],
+          "docs": "A package that was defined with a custom identifier."
+        },
+        {
+          "name": "LIFETIME",
+          "value": "\"LIFETIME\"",
+          "tags": [],
+          "docs": "A package configured with the predefined lifetime identifier."
+        },
+        {
+          "name": "ANNUAL",
+          "value": "\"ANNUAL\"",
+          "tags": [],
+          "docs": "A package configured with the predefined annual identifier."
+        },
+        {
+          "name": "SIX_MONTH",
+          "value": "\"SIX_MONTH\"",
+          "tags": [],
+          "docs": "A package configured with the predefined six month identifier."
+        },
+        {
+          "name": "THREE_MONTH",
+          "value": "\"THREE_MONTH\"",
+          "tags": [],
+          "docs": "A package configured with the predefined three month identifier."
+        },
+        {
+          "name": "TWO_MONTH",
+          "value": "\"TWO_MONTH\"",
+          "tags": [],
+          "docs": "A package configured with the predefined two month identifier."
+        },
+        {
+          "name": "MONTHLY",
+          "value": "\"MONTHLY\"",
+          "tags": [],
+          "docs": "A package configured with the predefined monthly identifier."
+        },
+        {
+          "name": "WEEKLY",
+          "value": "\"WEEKLY\"",
+          "tags": [],
+          "docs": "A package configured with the predefined weekly identifier."
+        }
+      ]
+    }
+  ],
+  "typeAliases": [],
+  "pluginConfigs": []
+}
