@@ -48,7 +48,6 @@ public class CapacitorPurchasesPlugin: CAPPlugin, PurchasesDelegate {
         let purchaserJson = customerInfo.dictionary
         self.notifyListeners("purchasesUpdate", data: ["customerInfo": purchaserJson])
     }
-
     @objc func getOfferings(_ call: CAPPluginCall) {
         Purchases.shared.getOfferings { (offerings, error) in
             if (error) != nil {
@@ -175,6 +174,19 @@ public class CapacitorPurchasesPlugin: CAPPlugin, PurchasesDelegate {
                 }
             }
         }
+    }
+
+    @objc func getProducts(_ call: CAPPluginCall) {
+        let productIdentifiers = call.getArray("productIdentifiers", String.self) ?? []
+
+        Purchases.shared.getProducts(Array(productIdentifiers), completion: { (products) in
+            let productsJson = products.map { (product) -> [String: Any] in
+                return product.rc_dictionary
+            }
+            call.resolve([
+                "products": productsJson
+            ])
+        })
     }
 
     @objc func setDebugLogsEnabled(_ call: CAPPluginCall) {
